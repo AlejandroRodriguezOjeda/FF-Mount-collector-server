@@ -22,12 +22,7 @@ const userSchema = new Schema(
     photoUrl:{
       type: String,
     },
-    favorite:[
-      {
-        type: Schema.Types.ObjectId,
-        ref: "MountTracker"
-      }
-    ]
+   
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    

@@ -1,7 +1,7 @@
-const User = require("../models/User.model");
+
 const bcrypt = require("bcryptjs")
 const router = require("express").Router();
-
+const User = require("../models/User.model");
 const jwt = require("jsonwebtoken");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
@@ -102,7 +102,9 @@ router.post("/login", async (req,res,next)=>{
 //GET /auth/verify => indicar al FE que el usario esta activo a llamadas futuras 
 
 router.get("/verify", isAuthenticated, (req,res,next) => {
-    console.log(payload);
+
+
+    console.log(req.payload);
 
     res.json(req.payload)
 })

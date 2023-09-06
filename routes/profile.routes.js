@@ -49,7 +49,7 @@ router.get("/:userId/details" , async (req,res,next) =>{
 router.get("/myFavorite" , async (req, res, next)=>{
     try {
         const response = await User.findById(req.payload._id).populate(
-            "MountTracker"
+            "mounttrackers"
         );
         res.status(200).json(response)
     } catch (error) {
