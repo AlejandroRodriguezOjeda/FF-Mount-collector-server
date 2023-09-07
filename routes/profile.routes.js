@@ -24,6 +24,19 @@ router.get("/my-profile",isAuthenticated, async (req,res,next)=>{
 })
 
 
+router.get("/owned-mounts", isAuthenticated, async (req, res, next) => {
+    console.log("test monturas");
+    try {
+      // Fetch mounts owned by the authenticated user
+      const ownedMounts = await MountTracker.find({ user: req.payload._id});
+      console.log(ownedMounts);
+      res.status(200).json(ownedMounts);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+
 // GET que muestra todos los usuarios
 router.get("/all-profiles", async (req,res,next) =>{
     try {
@@ -49,7 +62,7 @@ router.get("/:userId/details" , async (req,res,next) =>{
 router.get("/myFavorite" , async (req, res, next)=>{
     try {
         const user = await User.findById(req.payload._id).populate(
-            "mounttrackers"
+            "favorites"
         );
 
         const favoriteMounts = user.mounttrackers.map((tracker) => tracker.mount);

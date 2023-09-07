@@ -27,7 +27,10 @@ const userSchema = new Schema(
       enum: ["user", "admin"], 
       default: "user"
     },
-   
+   favorites:[{
+    type: Schema.Types.ObjectId,
+    ref: "MountTracker"
+   }]
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    

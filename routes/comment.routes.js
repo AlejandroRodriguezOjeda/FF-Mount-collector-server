@@ -32,7 +32,7 @@ router.get("/:mountId/comments", isAuthenticated, async(req,res,next)=>{
         const response = await Comments.find({ mount: `${mountId}`}).populate(
             "username"
         );
-        console.log("response",mountId);
+        console.log(response);
         res.status(200).json(response)
     } catch (error) {
         next(error)
@@ -42,9 +42,11 @@ router.get("/:mountId/comments", isAuthenticated, async(req,res,next)=>{
 router.delete("/:commentId/delete", isAuthenticated, async (req, res, next) => {
     const { commentId } = req.params;
     const { _id, role } = req.payload;
+    console.log(commentId);
   
     try {
       const commentDetails = await Comments.findById(commentId);
+      console.log(commentDetails);
       if (commentDetails.username._id == _id || role === "admin") {
         await Comments.findByIdAndDelete(commentId);
         res.status(200).json("Comment deleted");

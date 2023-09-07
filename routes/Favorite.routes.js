@@ -29,13 +29,26 @@ router.post("/new-favorite", isAuthenticated, async (req,res,next)=>{
     }
 })
 
-router.post("/mounts/mark-as-owned", isAuthenticated, async (req, res,next) => {
+router.patch("/:favoriteId/fav", isAuthenticated,async(req,res,next)=>{
+    const {_id} = req.payload;
+    const {favoriteId} = req.params
+    try {
+        await User.findByIdAndUpdate(_id,{
+            $addToSet: {favorites : favoriteId},
+        })
+        res.status(200).json("todo gucci")
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.post("/mark-as-owned", isAuthenticated, async (req, res,next) => {
     try {
       const { mountId } = req.params;
   
       // Create or update the user's ownership record for the mount
       await MountTracker.findOneAndUpdate(
-        { mount: mountId, user: req.user._id },
+        { mount: mountId, user: req.payload},
         { status: "owned" },
       
       );
@@ -48,15 +61,16 @@ router.post("/mounts/mark-as-owned", isAuthenticated, async (req, res,next) => {
   });
 
 router.get("/:favoriteId", isAuthenticated, async(req,res,next)=>{
-    const commentbox = req.body
+    
     try {
-        const favoriteId = req.params.favoriteId
-        const mount = await MountTracker.findById(favoriteId).populate(
+        const  comment = req.body
+        const { _id} = req.params
+        const mount = await MountTracker.findById(_id).populate(
             "user"
         );
         res.json({
             mount : mount,
-            commentbox : commentbox
+            comment :  comment
         })
     } catch (error) {
         next(error)
@@ -80,7 +94,8 @@ router.put("/:favoriteId/update", isAuthenticated, async(req,res,next)=>{
 
 router.delete("/:favoriteId/delete-fav", isAuthenticated, async (req, res, next) => {
     try {
-        const favoriteId = req.params.favoriteId;
+        const {favoriteId} = req.params;
+        console.log("Deleting favorite with ID:", favoriteId);
         
     
         const favoriteToDelete = await MountTracker.findById(favoriteId);
@@ -95,7 +110,7 @@ router.delete("/:favoriteId/delete-fav", isAuthenticated, async (req, res, next)
         }
 
    
-        await favoriteToDelete.remove();
+        await MountTracker.findByIdAndDelete(favoriteId);
 
         res.json({ message: "Favorite deleted successfully" });
     } catch (error) {
