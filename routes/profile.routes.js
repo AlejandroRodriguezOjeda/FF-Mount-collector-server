@@ -48,10 +48,12 @@ router.get("/:userId/details" , async (req,res,next) =>{
 
 router.get("/myFavorite" , async (req, res, next)=>{
     try {
-        const response = await User.findById(req.payload._id).populate(
+        const user = await User.findById(req.payload._id).populate(
             "mounttrackers"
         );
-        res.status(200).json(response)
+
+        const favoriteMounts = user.mounttrackers.map((tracker) => tracker.mount);
+        res.status(200).json(favoriteMounts)
     } catch (error) {
         next(error)
     }

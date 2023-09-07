@@ -3,14 +3,14 @@ const { Schema, model, default: mongoose } = require("mongoose");
 
 const commentSchema = new Schema({
 
-    user:{
+    username:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
     mount:{
         type: String
     },
-    content: String
+    comment: String
 })
 
 

@@ -7,7 +7,7 @@ const Comments = require("../models/Comments.model")
 router.post("/:mountId/createComment", isAuthenticated, async(req,res,next)=>{
     const {_id} = req.payload;
     const { mountId }= req.params;
-    const { content} = req.body;
+    const { comment} = req.body;
     console.log("body", req.body);
 
 
@@ -15,7 +15,7 @@ router.post("/:mountId/createComment", isAuthenticated, async(req,res,next)=>{
     const newComment = {
         username: _id,
         mount: mountId,
-        content,
+        comment: comment 
     }
 
     try {
@@ -38,5 +38,20 @@ router.get("/:mountId/comments", isAuthenticated, async(req,res,next)=>{
         next(error)
     }
 })
+
+router.delete("/:commentId/delete", isAuthenticated, async (req, res, next) => {
+    const { commentId } = req.params;
+    const { _id, role } = req.payload;
+  
+    try {
+      const commentDetails = await Comments.findById(commentId);
+      if (commentDetails.username._id == _id || role === "admin") {
+        await Comments.findByIdAndDelete(commentId);
+        res.status(200).json("Comment deleted");
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
 
 module.exports = router

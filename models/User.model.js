@@ -22,6 +22,11 @@ const userSchema = new Schema(
     photoUrl:{
       type: String,
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"], 
+      default: "user"
+    },
    
   },
   {
