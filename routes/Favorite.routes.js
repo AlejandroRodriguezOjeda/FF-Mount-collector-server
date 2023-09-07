@@ -29,7 +29,7 @@ router.post("/new-favorite", isAuthenticated, async (req,res,next)=>{
     }
 })
 
-router.patch("/:favoriteId/fav", isAuthenticated,async(req,res,next)=>{
+router.patch("/:favoriteId", isAuthenticated,async(req,res,next)=>{
     const {_id} = req.payload;
     const {favoriteId} = req.params
     try {
@@ -42,54 +42,48 @@ router.patch("/:favoriteId/fav", isAuthenticated,async(req,res,next)=>{
     }
 })
 
-router.post("/mark-as-owned", isAuthenticated, async (req, res,next) => {
-    try {
-      const { mountId } = req.params;
-  
-      // Create or update the user's ownership record for the mount
-      await MountTracker.findOneAndUpdate(
-        { mount: mountId, user: req.payload},
-        { status: "owned" },
-      
-      );
-  
-      res.status(200).json({ message: "Marked as owned" });
-  
-    } catch (error) {
-     next(error)
-    }
-  });
 
 router.get("/:favoriteId", isAuthenticated, async(req,res,next)=>{
     
     try {
-        const  comment = req.body
-        const { _id} = req.params
-        const mount = await MountTracker.findById(_id).populate(
+       
+        const { favoriteId} = req.params
+         const  {commentbox} = req.body
+        const mount = await MountTracker.findById(favoriteId).populate(
             "user"
         );
+        console.log("sale unde",mount);
         res.json({
             mount : mount,
-            comment :  comment
+            comment :  commentbox
         })
     } catch (error) {
         next(error)
     }
 })
-
-router.put("/:favoriteId/update", isAuthenticated, async(req,res,next)=>{
+router.put("/:favoriteId/update", isAuthenticated, async (req, res, next) => {
     try {
-        const {favoriteId} = req.params;
-        const oneMount = await MountTracker.findByIdAndUpdate(favoriteId).populate(
-            "user"
-        );
-        res.json({
-            oneMount : oneMount
-        })
+      const { favoriteId } = req.params;
+      const updateData = req.body; 
+  
+      // Use findByIdAndUpdate to find and update the mount
+      const updatedMount = await MountTracker.findByIdAndUpdate(
+        favoriteId,
+        { $set: updateData }, // Update only the specified fields
+        { new: true } // return the updated mount after the update
+      ).populate("user");
+  
+      if (!updatedMount) {
+        // If the mount with the given favoriteId is not found
+        return res.status(404).json({ error: "Mount not found" });
+      }
+  
+      res.json({ updatedMount });
     } catch (error) {
-        next(error)
+      next(error);
     }
-})
+  });
+  
 
 
 router.delete("/:favoriteId/delete-fav", isAuthenticated, async (req, res, next) => {

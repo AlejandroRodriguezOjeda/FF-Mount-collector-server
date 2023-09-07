@@ -59,18 +59,18 @@ router.get("/:userId/details" , async (req,res,next) =>{
     }
 })
 
-router.get("/myFavorite" , async (req, res, next)=>{
-    try {
-        const user = await User.findById(req.payload._id).populate(
-            "favorites"
-        );
+// router.get("/myFavorite" , async (req, res, next)=>{
+//     try {
+//         const user = await User.findById(req.payload._id).populate(
+//             "favorites"
+//         );
 
-        const favoriteMounts = user.mounttrackers.map((tracker) => tracker.mount);
-        res.status(200).json(favoriteMounts)
-    } catch (error) {
-        next(error)
-    }
-})
+//         const favoriteMounts = user.mounttrackers.map((tracker) => tracker.mount);
+//         res.status(200).json(favoriteMounts)
+//     } catch (error) {
+//         next(error)
+//     }
+// })
 
 
 
