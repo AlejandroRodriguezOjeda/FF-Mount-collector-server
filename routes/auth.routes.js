@@ -25,17 +25,8 @@ router.post("/signup", async (req, res, next)=>{
         if(userfound !== null){
             res.status(400).json({errorMessage: "this user already exists!!"})
         }
-        
 
-
-
-    }
-    catch(error){
-        next(error)
-    }
-
-    try {
-         const salt = await bcrypt.genSalt(10)
+        const salt = await bcrypt.genSalt(10)
          const hashPassword = await bcrypt.hash(password,salt)
          console.log(hashPassword);
 
@@ -49,9 +40,16 @@ router.post("/signup", async (req, res, next)=>{
 
 
          res.json("usuario creado")
-    } catch (error) {
+        
+
+
+
+    }
+    catch(error){
         next(error)
     }
+
+  
 })
 
 //POST /auth/login => validar credenciales
