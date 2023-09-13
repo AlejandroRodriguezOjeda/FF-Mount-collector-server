@@ -23,11 +23,15 @@ router.get("/my-profile",isAuthenticated, async (req,res,next)=>{
     }
 })
 
-router.post( "/my-profile", uploader.single("imageUrl"),  async (req, res, next) => {
+router.post( "/my-profile", uploader.single("image"), isAuthenticated,   async (req, res, next) => {
     try{
-    const updatedUser = await  User.findByIdAndUpdate(req.payload._id, {
-        imageUrl: req.file.path,
-      },{ new: true })
+
+      const {_id} = req.payload
+      const imageUrl = req.file ? req.file.path : null
+      console.log("here it is",req.file);
+    const updatedUser = await  User.findByIdAndUpdate(_id, {
+        image: imageUrl
+      })
     
       if (!updatedUser) {
         return res.status(400).json({ errorMessage: "User not found" });
