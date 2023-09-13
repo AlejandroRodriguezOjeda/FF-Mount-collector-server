@@ -19,7 +19,7 @@ router.post("/new-favorite", isAuthenticated, async (req,res,next)=>{
         await MountTracker.create({
             user : req.payload._id,
             mount : req.body.mount,
-            commentbox : req.body.commentbox
+            notes : req.body.notes
 
         })
 
@@ -48,14 +48,14 @@ router.get("/:favoriteId", isAuthenticated, async(req,res,next)=>{
     try {
        
         const { favoriteId} = req.params
-         const  {commentbox} = req.body
+      
         const mount = await MountTracker.findById(favoriteId).populate(
             "user"
         );
         console.log("sale unde",mount);
         res.json({
             mount : mount,
-            comment :  commentbox
+           
         })
     } catch (error) {
         next(error)

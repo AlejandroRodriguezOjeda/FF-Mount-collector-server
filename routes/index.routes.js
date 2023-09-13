@@ -16,4 +16,7 @@ router.use("/mounts", mountRouter)
 const commentsRouter = require("./comment.routes");
 router.use("/comment", commentsRouter)
 
+const uploadRoutes = require("./upload.routes")
+router.use("/upload", uploadRoutes)
+
 module.exports = router;

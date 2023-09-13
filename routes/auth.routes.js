@@ -34,7 +34,8 @@ router.post("/signup", async (req, res, next)=>{
          await User.create({
             username,
             email,
-            password: hashPassword
+            password: hashPassword,
+            
          })
 
 
@@ -81,7 +82,8 @@ router.post("/login", async (req,res,next)=>{
             _id: foundUser._id,
             email: foundUser.email,
             username: foundUser.username,
-            role : foundUser.role
+            role : foundUser.role,
+            imageUrl : foundUser.imageUrl
         }
 
         const authToken = jwt.sign(

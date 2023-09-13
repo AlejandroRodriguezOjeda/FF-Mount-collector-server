@@ -6,10 +6,10 @@ const MountTracker = require("../models/MountTracker.model")
 const uploader = require("../middlewares/Cloudinary")
 
 
+
 router.get("/my-profile",isAuthenticated, async (req,res,next)=>{
     
     try {
-
         
         const user = await User.findById(req.payload._id)
 
@@ -23,12 +23,42 @@ router.get("/my-profile",isAuthenticated, async (req,res,next)=>{
     }
 })
 
+router.post( "/my-profile", uploader.single("imageUrl"),  async (req, res, next) => {
+    try{
+    const updatedUser = await  User.findByIdAndUpdate(req.payload._id, {
+        imageUrl: req.file.path,
+      },{ new: true })
+    
+      if (!updatedUser) {
+        return res.status(400).json({ errorMessage: "User not found" });
+      }
+
+      res.json({ updatedUser });
+    } catch (error) {
+      next(error);
+    }
+    }
+  );
+
 
 router.get("/owned-mounts", isAuthenticated, async (req, res, next) => {
     console.log("test monturas");
     try {
       // Fetch mounts owned by the authenticated user
       const ownedMounts = await MountTracker.find({ user: req.payload._id});
+      console.log(ownedMounts);
+      res.status(200).json(ownedMounts);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.get("/:userId/owned-mounts",  async (req, res, next) => {
+    const { userId } = req.params;
+  
+    try {
+      // Fetch mounts owned by the user with the specified ID
+      const ownedMounts = await MountTracker.find({ user: userId });
       console.log(ownedMounts);
       res.status(200).json(ownedMounts);
     } catch (error) {
@@ -58,23 +88,6 @@ router.get("/:userId/details" , async (req,res,next) =>{
         next(error)
     }
 })
-
-// router.get("/myFavorite" , async (req, res, next)=>{
-//     try {
-//         const user = await User.findById(req.payload._id).populate(
-//             "favorites"
-//         );
-
-//         const favoriteMounts = user.mounttrackers.map((tracker) => tracker.mount);
-//         res.status(200).json(favoriteMounts)
-//     } catch (error) {
-//         next(error)
-//     }
-// })
-
-
-
-
 
 
 

@@ -11,7 +11,7 @@ const mountTrackerScheema = new Schema({
     mount:{
         type:String,
     },
-    commentbox:{
+  notes:{
         type: String
     },
     status:{

@@ -19,22 +19,14 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Password is required.']
     },
-    photoUrl:{
+    imageUrl:{
       type: String,
     },
     role: {
       type: String,
       enum: ["user", "admin"], 
       default: "user"
-    },
-   favorites:[{
-    type: Schema.Types.ObjectId,
-    ref: "MountTracker"
-   }]
-  },
-  {
-    // this second object adds extra properties: `createdAt` and `updatedAt`    
-    timestamps: true
+    }
   }
 );
 
